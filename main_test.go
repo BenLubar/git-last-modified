@@ -68,7 +68,7 @@ func testStderr(t *testing.T, f func(), expected string) {
 
 		os.Stderr = realStderr
 		stderr = oldStderr
-		if actual := strings.Replace(buf.String(), "\r\n", "\n", -1); actual != expected {
+		if actual := strings.Replace(buf.String(), "\r\n", "\n", -1); !strings.EqualFold(actual, expected) {
 			t.Error("Expected stderr does not match actual stderr.")
 			t.Errorf("expected: %q", expected)
 			t.Errorf("actual:   %q", actual)
