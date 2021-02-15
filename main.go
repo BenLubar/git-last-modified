@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 )
 
 var flagSet = flag.NewFlagSet("git-last-modified", flag.ContinueOnError)
@@ -45,7 +46,11 @@ func main() {
 	files := flag.Args()
 	if len(files) == 0 {
 		*flagQuiet = true
-		checkError(filepath.Walk(".", walkFunc))
+
+		var w walker
+		w.start(runtime.GOMAXPROCS(0))
+		checkError(filepath.Walk(".", w.callback))
+		w.finish()
 	} else {
 		for _, path := range files {
 			checkError(setModTime(path))
